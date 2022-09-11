@@ -1,9 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-using CoreImprove.Infra.DiscordIntegration;
-using CoreImprove.Infra.Models;
-using Microsoft.Extensions.Hosting;
-
 namespace CoreImprove.App.Workers;
 
 internal class DiscordWorker : BackgroundService
@@ -20,7 +14,7 @@ internal class DiscordWorker : BackgroundService
 			{
                 RichPresence presence = Settings.DiscordPresence;
 				DiscordRpc.UpdatePresence(ref presence);
-				await Task.Delay(1000);
+				await Task.Delay(1000, stoppingToken);
 			}
 		}
 	}

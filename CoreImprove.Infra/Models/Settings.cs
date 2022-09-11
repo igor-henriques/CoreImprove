@@ -5,35 +5,37 @@ namespace CoreImprove.Infra.Models;
 
 public class Settings
 {
-	public static Role CharInformation;
 	public static readonly bool IsSenderFeatureActive = true;
 	public static readonly bool IsDiscordFeatureActive = true;
 	public static readonly string ClientName = "Toronto";
 	public static readonly string DiscordClientID = "999752250303987722";
-	public static readonly string Description = $"pwtoronto.com";
-	public static readonly Stopwatch stopwatch = Stopwatch.StartNew();
+
+	private static readonly string Description = $"pwtoronto.com";
+	private static readonly Stopwatch stopwatch = Stopwatch.StartNew();
+	private static readonly string largeImageKey = "imagem_2022-07-21_164836516";
+	private static readonly string website = "http://www.pwtoronto.com";
 
 	public static RichPresence DiscordPresence
 	{
 		get
 		{
+			bool hasClass = !string.IsNullOrEmpty(Role.Occupation);
 			string timePlaying = $"Tempo on-line: {GetTimePlaying()}";
-			string details = CharInformation?.Name == null ? Description : ("Jogando como " + CharInformation?.Name);
-			string state = CharInformation?.Level == null ? timePlaying : $"Level: {CharInformation.Level}\n{timePlaying}";
 
-			RichPresence result = default(RichPresence);
+			string details = Role.Name == null ? Description : ($"Jogando como {Role.Name}");
+			string state = Role.Level == default(uint) ? timePlaying : $"Level: {Role.Level} | {GetTimePlaying()}";
+
+			if (hasClass)
+				state += $" | Classe: {Role.Occupation}";
+
+            RichPresence result = default(RichPresence);
 			result.state = state;
 			result.details = details;
-			result.largeImageKey = "imagem_2022-07-21_164836516";
-			result.largeImageText = "http://www.pwtoronto.com";
+			result.largeImageKey = largeImageKey;
+			result.largeImageText = website;
 
 			return result;
 		}
-	}
-
-	public static void SetCharInformation(uint id, string charName, uint level)
-	{
-		CharInformation = Role.Define(id, charName, level);
 	}
 
 	private static string GetTimePlaying()

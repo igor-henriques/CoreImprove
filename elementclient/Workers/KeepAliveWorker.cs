@@ -1,9 +1,3 @@
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using CoreImprove.Infra.Utils;
-using Microsoft.Extensions.Hosting;
-
 namespace CoreImprove.App.Workers;
 
 internal class KeepAliveWorker : BackgroundService
@@ -14,10 +8,10 @@ internal class KeepAliveWorker : BackgroundService
 		{
 			if (TaskUtils.GetFirstClientProcess() == null)
 			{
-				Process.GetCurrentProcess().Kill();
+				Process.GetCurrentProcess()?.Kill();
 			}
 
-			await Task.Delay(1000);
+			await Task.Delay(1000, stoppingToken);
 		}
 	}
 }

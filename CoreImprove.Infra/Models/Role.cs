@@ -2,19 +2,16 @@ namespace CoreImprove.Infra.Models;
 
 public record Role
 {
-	public uint Id { get; private set; }
+	public static uint Id { get; private set; }
+	public static string Name { get; private set; }
+	public static uint Level { get; private set; }
+	public static string Occupation { get; private set; }
 
-	public string Name { get; private set; }
-
-	public uint Level { get; private set; }
-
-	public static Role Define(uint Id, string Name, uint Level)
+	public static void SetProperties(uint id = default, string name = default, uint level = default, string occupation = default)
 	{
-		return new Role
-		{
-			Id = Id,
-			Name = Name,
-			Level = Level
-		};
+		if (id != default) Id = id;
+		if (name != default) Name = name;
+		if (level != default) Level = level;
+		if (occupation != default) Occupation = occupation;
 	}
 }

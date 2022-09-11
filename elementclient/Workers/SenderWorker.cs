@@ -1,13 +1,3 @@
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using CoreImprove.Infra.Models;
-using CoreImprove.Infra.Utils;
-using Microsoft.Extensions.Hosting;
-
 namespace CoreImprove.App.Workers;
 
 internal class SenderWorker : BackgroundService
@@ -18,19 +8,19 @@ internal class SenderWorker : BackgroundService
     {
         if (!Settings.IsSenderFeatureActive)
             return;
+        
+        Process clientInstance = await StartClient();
 
         if (IsEnhanceEnabled())
             return;
-
-        Process clientInstance = await StartClient();
 
         if (await LoadEnhance(clientInstance))
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                Settings.SetCharInformation(manager.elementclient.UID, manager.elementclient.Name, manager.elementclient.Level);
+                Role.SetProperties(manager.elementclient.UID, manager.elementclient.Name, manager.elementclient.Level, manager.elementclient.Occupation);
 
-                await Task.Delay(1000);
+                await Task.Delay(1000, stoppingToken);
             }
         }
     }
